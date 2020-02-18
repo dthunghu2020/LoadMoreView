@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">API Load More</string>
+    <string name="id_user">Mã khách hàng</string>
+    <string name="user">Tài khoản</string>
+    <string name="pass">Mật khẩu</string>
+    <string name="forgot">Quên mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="login_fail">Đăng nhập thất bại</string>
+    <string name="login_success">Đăng nhập thành công!</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">  View less</string>
+    <string name="button_like">Like</string>
+    <string name="button_comment">Comment</string>
+</resources>

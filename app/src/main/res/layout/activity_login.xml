@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_backgroud"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".view.LoginActivity">
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="180dp"
+        android:background="@drawable/logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/id_user"
+        android:textColor="@color/colorGray" />
+
+    <EditText
+        android:text="hosco"
+        android:id="@+id/edtUserId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorWhite"
+        android:padding="10dp"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/user"
+        android:textColor="@color/colorGray" />
+
+    <EditText
+        android:text="admin"
+        android:id="@+id/edtUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorWhite"
+        android:drawableEnd="@drawable/user"
+        android:padding
+            ="10dp"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/pass"
+        android:textColor="@color/colorGray" />
+
+    <EditText
+        android:text="1"
+        android:id="@+id/edtUserPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorWhite"
+        android:drawableEnd="@drawable/lock"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/btnForgotPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/forgot"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button"
+        android:text="@string/login"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp" />
+
+</LinearLayout>
