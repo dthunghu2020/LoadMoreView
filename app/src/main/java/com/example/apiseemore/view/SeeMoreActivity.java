@@ -122,18 +122,19 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
 
     @Override
     public void onGetDataSuccess(final List<Datum> dataList, int recordsTotal) {
-        if (datas.get(datas.size() - 1) == null) {
-            datas.remove(datas.size() - 1);
-        }
-        datas.addAll(dataList);
+
+
         if (!isFirstData) {
             if (datas.size() == recordsTotal) {
                 statusAdapter.setOutOfData(true);
             }
-
-
+            if (datas.get(datas.size() - 1) == null) {
+                datas.remove(datas.size() - 1);
+            }
+            datas.addAll(dataList);
             statusAdapter.notifyDataSetChanged();
         } else {
+            datas.addAll(dataList);
             statusAdapter = new StatusAdapter(this, datas);
             rcvStatusSM.setHasFixedSize(true);
             rcvStatusSM.setAdapter(statusAdapter);
