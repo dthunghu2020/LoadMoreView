@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginPresenter 
     public void onLoginSuccess(String token) {
         Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginActivity.this, SeeMoreActivity.class);
-        intent.putExtra(KEY.TOKEN, "Bearer" + token);
+        intent.putExtra(KEY.TOKEN,token);
         startActivity(intent);
     }
 

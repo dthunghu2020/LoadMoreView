@@ -16,7 +16,7 @@ import retrofit2.Response;
 
 public class LoginPresenter {
 
-    private static final int REQUEST_CODE = 200;
+    private int REQUEST_CODE = 200;
     private ILoginPresenter mILoginprisenter;
 
     public LoginPresenter(ILoginPresenter mILoginprisenter) {
@@ -35,7 +35,7 @@ public class LoginPresenter {
     }
 
     private void checkLoginRequestAPI(String useName, String userPass, String userId) {
-        ApiService mApiService = ApiUtils.postLoginService();
+        ApiService mApiService = ApiUtils.postService();
 
         LoginPostRequest loginPostRequest = new LoginPostRequest(useName, userPass, userId, "");
         Call<AllLoginResponse> call = mApiService.postLogin(loginPostRequest);

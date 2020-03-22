@@ -88,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="5dp" />
+                android:padding="1dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -197,15 +197,15 @@
                 <ImageView
                     android:layout_gravity="center"
                     android:id="@+id/imgLiked"
-                    android:layout_width="30dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/btn_liked" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/liked" />
                 <ImageView
                     android:layout_gravity="center"
                     android:id="@+id/imgLike"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/btn_like" />
+                    android:background="@drawable/like" />
             </FrameLayout>
 
 

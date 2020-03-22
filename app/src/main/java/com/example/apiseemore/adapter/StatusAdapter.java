@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.apiseemore.KEY;
 import com.example.apiseemore.R;
 import com.example.apiseemore.model.seemore.Datum;
+import com.example.apiseemore.presenter.seemore.ISeeMorePresenter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,8 +38,12 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final int VIEW_TYPE_LOADING = 1;
     private boolean isOutOfData;
 
+
+    private OnItemClickListener onItemClickListener;
     private List<Datum> dataList;
     private LayoutInflater layoutInflater;
+    private Boolean liked;
+    private int countLike;
 
     public StatusAdapter(Context context, List<Datum> dataList) {
         layoutInflater = LayoutInflater.from(context);
@@ -81,7 +87,7 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     //Check view type
     @Override
     public int getItemViewType(int position) {
-        if (dataList.get(position)==null&&!isOutOfData) {
+        if (dataList.get(position) == null && !isOutOfData) {
             return VIEW_TYPE_LOADING;
         } else {
             return VIEW_TYPE_STATUS;
@@ -151,16 +157,18 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @SuppressLint("SetTextI18n")
-    private void statusView(final StatusViewHolder holder, int position) {
+    private void statusView(final StatusViewHolder holder, final int position) {
         final Datum data = dataList.get(position);
+        //Avatar
         Glide.with(layoutInflater.getContext())
                 .load(data.getUser().getPicture())
+                .override(75, 75)
                 .into(holder.imgUserAvatar);
+        //UserName
         holder.txtUserName.setText(data.getUser().getFirstname() + " " + data.getUser().getLastname());
-
         //xử lí DateTime
         Calendar calendar = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm a");
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date date;
         try {
@@ -169,7 +177,7 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             long timeCreated = date.getTime();
             long checkTime = calendar.getTimeInMillis() - timeCreated;
             if (checkTime < 60000) {
-                holder.txtStatusCreatedDate.setText("Just now");
+                holder.txtStatusCreatedDate.setText("Vừa xong");
             } else if (checkTime < 3600000) {
                 holder.txtStatusCreatedDate.setText((checkTime / 60000) + " Phút trước");
             } else if (checkTime < 86400000) {
@@ -182,18 +190,18 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        //ReadMoreTextView
         holder.rmtvContent.setText(data.getContent());
-
         //Xử lí ảnh (Json Object)
         String json_image = "{\"image\":" + data.getImage() + "}";
         try {
             JSONObject imageJSONObject = new JSONObject(json_image);
             JSONArray imageList = imageJSONObject.getJSONArray("image");
-
             if (imageList.length() == 0) {
+                //no photo
                 holder.mFLImg.setVisibility(View.GONE);
             } else if (imageList.length() == 1) {
+                //1 photos
                 holder.mFLImg.setVisibility(View.VISIBLE);
                 holder.img1Img.setVisibility(View.VISIBLE);
                 holder.mLL2Img.setVisibility(View.GONE);
@@ -204,6 +212,7 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .centerCrop()
                         .into(holder.img1Img);
             } else if (imageList.length() == 2) {
+                //2 photos
                 holder.mFLImg.setVisibility(View.VISIBLE);
                 holder.img1Img.setVisibility(View.GONE);
                 holder.mLL2Img.setVisibility(View.VISIBLE);
@@ -225,6 +234,7 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 }
             } else if (imageList.length() > 2) {
+                // >2 photos
                 holder.mFLImg.setVisibility(View.VISIBLE);
                 holder.img1Img.setVisibility(View.GONE);
                 holder.mLL2Img.setVisibility(View.GONE);
@@ -262,13 +272,23 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //Khi Click ảnh
+        holder.mFLImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.OnItemClicked(holder.getAdapterPosition(), KEY.IMAGES);
+            }
+        });
 
-
+        //Text Like and CommentBottomSheetDialogFragment
         holder.txtNBLike.setText(data.getCountLiked() + " Like");
         holder.txtNBComment.setText(data.getCountComments() + " Comment");
 
         //Xử lí các nút
-        final Boolean liked = data.getLiked();
+        liked = data.getLiked();
+        //todo
+        //todo
+        //todo
         if (liked) {
             holder.imgLiked.setVisibility(View.VISIBLE);
             holder.imgLike.setVisibility(View.INVISIBLE);
@@ -276,6 +296,7 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.imgLiked.setVisibility(View.INVISIBLE);
             holder.imgLike.setVisibility(View.VISIBLE);
         }
+         countLike = data.getCountLiked();
         holder.btnLike.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -283,20 +304,22 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 if (liked) {
                     holder.imgLiked.setVisibility(View.INVISIBLE);
                     holder.imgLike.setVisibility(View.VISIBLE);
-                    int x = data.getCountLiked() - 1;
-                    holder.txtNBLike.setText(x + " Like");
+                    countLike--;
+                    holder.txtNBLike.setText(countLike + " Like");
+                    liked = false;
                 } else {
                     holder.imgLiked.setVisibility(View.VISIBLE);
                     holder.imgLike.setVisibility(View.INVISIBLE);
-                    int x = data.getCountLiked() + 1;
-                    holder.txtNBLike.setText(x + " Like");
+                    countLike++;
+                    holder.txtNBLike.setText(countLike + " Like");
+                    liked = true;
                 }
             }
         });
         holder.btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo
+                onItemClickListener.OnItemClicked(holder.getAdapterPosition(), KEY.COMMENTS);
             }
         });
 
@@ -345,4 +368,11 @@ public class StatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void showLoadingView() {
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void OnItemClicked(int position, String type);
+    }
 }

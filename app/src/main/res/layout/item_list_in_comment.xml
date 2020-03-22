@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <ImageView
+        android:id="@+id/imgAvatarListComment"
+        android:layout_width="35dp"
+        android:layout_height="35dp" />
+
+    <TextView
+        android:id="@+id/txtUserNameListComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:text="ADMIN"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/txtTextListComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:text="Text"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:colorClickableText="@color/colorDarkGray"
+        app:showTrimExpandedText="true"
+        app:trimCollapsedText="@string/view_more"
+        app:trimExpandedText="@string/view_less"
+        app:trimLength="20"
+        app:trimMode="trimModeLength" />
+
+</LinearLayout>

@@ -1,7 +1,5 @@
 package com.example.apiseemore.presenter.seemore;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.apiseemore.api.ApiService;
@@ -16,7 +14,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SeeMorePresenter {
-    private static final int REQUEST_CODE = 200;
+    private int REQUEST_CODE = 200;
     private ISeeMorePresenter mISeeMorePresenter;
 
     public SeeMorePresenter(ISeeMorePresenter mISeemorePresenter) {
@@ -24,7 +22,7 @@ public class SeeMorePresenter {
     }
 
     public void getDataSM(String token,String pageLimit,String page) {
-        ApiService mApiService = ApiUtils.postLoginService();
+        ApiService mApiService = ApiUtils.postService();
 
         mApiService.getSeemore(token, pageLimit, page).enqueue(new Callback<AllSeeMoreResponse>() {
             @Override

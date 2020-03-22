@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +50,7 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
         setContentView(R.layout.activity_see_more);
         initView();
         init();
+        statusAdapter = new StatusAdapter(this, datas);
         event();
     }
 
@@ -59,6 +59,7 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
         edtSM = findViewById(R.id.edtSM);
         imgBtPictureSM = findViewById(R.id.imgBtPictureSM);
         rcvStatusSM = findViewById(R.id.rcvStatusSM);
+
     }
 
     private void init() {
@@ -66,9 +67,9 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
     }
 
     private void event() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         token = intent.getStringExtra(KEY.TOKEN);
-        mSeeMorePresenter.getDataSM(token, pageLimit, String.valueOf(firstPage));
+        mSeeMorePresenter.getDataSM("Bearer"+token, pageLimit, String.valueOf(firstPage));
         //Load Refresh
         srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -77,7 +78,7 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
                 datas.add(null);
                 page = 1;
                 statusAdapter.setOutOfData(false);
-                mSeeMorePresenter.getDataSM(token, pageLimit, String.valueOf(firstPage));
+                mSeeMorePresenter.getDataSM("Bearer"+token, pageLimit, String.valueOf(firstPage));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -112,18 +113,37 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
                             datas.add(null);
                             statusAdapter.notifyDataSetChanged();
                             page += 1;
-                            mSeeMorePresenter.getDataSM(token, pageLimit, String.valueOf(page));
+                            mSeeMorePresenter.getDataSM("Bearer"+token, pageLimit, String.valueOf(page));
                         }
                     }
                 }
             }
         });
+        //Xử lí khi click ảnh
+        statusAdapter.setOnItemClickListener(new StatusAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClicked(int position,String type) {
+                if(type.equals(KEY.IMAGES)){
+                    Intent intent1 = new Intent(SeeMoreActivity.this,DetailPhotoActivity.class);
+                    intent1.putExtra(KEY.IMAGES,datas.get(position).getImage().toString());
+                    startActivity(intent1);
+                }
+                if (type.equals(KEY.COMMENTS)){
+                    Intent intent2 = new Intent(SeeMoreActivity.this,CommentActivity.class);
+                    intent2.putExtra(KEY.ID_COMMENT,datas.get(position).getId().toString());
+                    intent2.putExtra(KEY.TOKEN,token);
+                    startActivity(intent2);
+
+                    /*CommentBottomSheetDialogFragment comment = new CommentBottomSheetDialogFragment();
+                    comment.show(getSupportFragmentManager(),"hello");*/
+                }
+            }
+        });
     }
+
 
     @Override
     public void onGetDataSuccess(final List<Datum> dataList, int recordsTotal) {
-
-
         if (!isFirstData) {
             if (datas.size() == recordsTotal) {
                 statusAdapter.setOutOfData(true);
@@ -135,10 +155,9 @@ public class SeeMoreActivity extends AppCompatActivity implements ISeeMorePresen
             statusAdapter.notifyDataSetChanged();
         } else {
             datas.addAll(dataList);
-            statusAdapter = new StatusAdapter(this, datas);
-            rcvStatusSM.setHasFixedSize(true);
-            rcvStatusSM.setAdapter(statusAdapter);
             rcvStatusSM.setLayoutManager(new LinearLayoutManager(this));
+            rcvStatusSM.setAdapter(statusAdapter);
+            rcvStatusSM.setHasFixedSize(true);
             isFirstData = false;
         }
     }
